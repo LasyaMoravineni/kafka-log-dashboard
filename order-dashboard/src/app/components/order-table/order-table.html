@@ -1,0 +1,167 @@
+<div class="login-container" *ngIf="!connected">
+
+  <div class="login-box">
+
+    <h2>Select Customer</h2>
+
+    <label>Customer</label>
+
+    <select [(ngModel)]="customerId">
+      <option value="">Choose Customer ID</option>
+      <option value="1001">1001</option>
+      <option value="1002">1002</option>
+      <option value="1003">1003</option>
+    </select>
+
+    <button (click)="connectLogs()" [disabled]="!customerId">
+      Connect Dashboard
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<div *ngIf="connected">
+
+<div class="dashboard-header">
+
+  <h1 class="title">
+    Live Log Monitoring Dashboard
+  </h1>
+
+  <div class="customer-badge">
+    Customer ID: {{ customerId }}
+  </div>
+
+</div>
+
+
+<div class="controls">
+
+  <button class="start-btn" (click)="startStreaming()" [disabled]="streaming">Start</button>
+  <button class="stop-btn" (click)="stopStreaming()" [disabled]="!streaming">Stop</button>
+
+</div>
+
+
+
+<div class="filters">
+
+  <div class="filter-box">
+
+    <label>Service</label>
+
+    <select [(ngModel)]="selectedService">
+      <option value="">All Services</option>
+      <option value="OrderService">Order</option>
+      <option value="PaymentService">Payment</option>
+      <option value="AuthService">Auth</option>
+      <option value="InventoryService">Inventory</option>
+    </select>
+
+  </div>
+
+</div>
+
+
+
+<div class="stats">
+
+  <div class="stat-card">
+    Total Logs
+    <span>{{logs.length}}</span>
+  </div>
+
+  <div class="stat-card">
+    Logs/sec
+    <span>{{logsPerSecond}}</span>
+  </div>
+
+  <div class="stat-card error">
+    Errors
+    <span>{{logs.filter(l => l.logLevel === 'ERROR').length}}</span>
+  </div>
+
+  <div class="stat-card warn">
+    Warnings
+    <span>{{logs.filter(l => l.logLevel === 'WARN').length}}</span>
+  </div>
+
+</div>
+
+
+
+<div class="dashboard-grid">
+
+  <div class="chart-box">
+    <h3>Logs per Service</h3>
+    <canvas id="serviceChart"></canvas>
+  </div>
+
+  <div class="chart-box">
+    <h3>Log Level Distribution</h3>
+    <canvas id="levelChart"></canvas>
+  </div>
+
+  <div class="chart-box">
+    <h3>Service Distribution</h3>
+    <canvas id="servicePie"></canvas>
+  </div>
+
+  <div class="chart-box">
+    <h3>Logs / Second</h3>
+    <canvas id="lineChart"></canvas>
+  </div>
+
+</div>
+
+
+
+<div class="table-container">
+
+<h3>Live Logs</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Timestamp</th>
+<th>Customer</th>
+<th>Service</th>
+<th>Level</th>
+<th>Message</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr *ngFor="let log of filteredLogs()">
+
+<td>{{log.timestamp}}</td>
+<td>{{log.customerId}}</td>
+<td>{{log.serviceName}}</td>
+
+<td>
+<span
+[ngClass]="{
+'error-level': log.logLevel === 'ERROR',
+'warn-level': log.logLevel === 'WARN',
+'info-level': log.logLevel === 'INFO'
+}">
+{{log.logLevel}}
+</span>
+</td>
+
+<td>{{log.message}}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>

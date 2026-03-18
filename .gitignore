@@ -1,0 +1,21 @@
+# Angular
+node_modules/
+dist/
+.angular/
+
+# Spring Boot
+target/
+*.class
+
+# Logs
+*.log
+
+# Mac
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Env
+.env
