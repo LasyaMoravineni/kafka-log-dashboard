@@ -1,0 +1,143 @@
+<div class="login-container" *ngIf="!connected">
+  
+  <div class="login-box">
+    <h2>Log Monitor</h2>
+    <p>Select filters then connect to start streaming</p>
+    <!-- ✅ Filters shown before connect so user picks them first -->
+    <div class="pre-connect-filters">
+      <div> <label>Client</label> <select [(ngModel)]="selectedCustomer">
+          <option value="">All Clients</option>
+          <option value="CUST-1001">CUST-1001</option>
+          <option value="CUST-1002">CUST-1002</option>
+          <option value="CUST-1003">CUST-1003</option>
+        </select> </div>
+      <div> <label>Service</label> <select [(ngModel)]="selectedService">
+          <option value="">All Services</option>
+          <option value="OrderService">Order</option>
+          <option value="PaymentService">Payment</option>
+          <option value="AuthService">Auth</option>
+          <option value="InventoryService">Inventory</option>
+        </select> </div>
+    </div> <button (click)="connectLogs()">Connect</button>
+  </div>
+
+</div>
+
+
+
+
+<div class="dashboard-container" *ngIf="connected">
+  <div class="dashboard-header">
+    <h2 class="title">Log Monitor Dashboard</h2>
+
+    <div class="controls"> 
+      <button class="start-btn" (click)="startStreaming()" [disabled]="streaming">Start</button>
+      <button class="stop-btn" (click)="stopStreaming()" [disabled]="!streaming">Stop</button>
+    </div>
+  </div> 
+
+
+<div class="filters-section">
+  <!-- ✅ Active filter indicator -->
+  <div class="active-filters"> 
+    <strong><span>Filtering by: </span></strong> 
+    {{ selectedCustomer || 'All Clients' }}
+    <span>/</span> 
+    {{ selectedService || 'All Services' }}
+  </div>
+
+    <!-- Filters -->
+  
+    <div class="filter-box">
+      <h4>Change filter: </h4>
+       
+        <label>Client </label> 
+        <!-- ✅ (ngModelChange) triggers onFilterChange() --> 
+         <select
+          [(ngModel)]="selectedCustomer" (ngModelChange)="onFilterChange()">
+          <option value="">All Clients</option>
+          <option value="CUST-1001">CUST-1001</option>
+          <option value="CUST-1002">CUST-1002</option>
+          <option value="CUST-1003">CUST-1003</option>
+        </select> 
+      
+
+      
+        <label>Service </label> 
+        <!-- ✅ (ngModelChange) triggers onFilterChange() --> 
+         <select
+          [(ngModel)]="selectedService" (ngModelChange)="onFilterChange()">
+          <option value="">All Services</option>
+          <option value="OrderService">Order</option>
+          <option value="PaymentService">Payment</option>
+          <option value="AuthService">Auth</option>
+          <option value="InventoryService">Inventory</option>
+        </select> 
+      
+
+    </div>
+ 
+</div>
+  
+
+  <div class="stats">
+    <div class="stat-card"> Total Logs 
+      <strong><span>{{ logs.length }}</span> </strong>
+    </div>
+    <div class="stat-card"> Logs/sec 
+      <strong><span>{{ logsPerSecond }}</span> </strong>
+    </div>
+    <div class="stat-card error"> Errors 
+      strong
+      <strong><span>{{ logLevels.ERROR }}</span> </strong>
+    </div>
+    <div class="stat-card warn"> Warnings 
+      <strong><span>{{ logLevels.WARN }}</span> </strong>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- <div class="chart-box"> <h3>Logs per Service</h3> <canvas id="serviceChart"></canvas> </div> -->
+    <div class="chart-box">
+      <h3>Log Level Distribution</h3> <canvas id="levelChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Service Distribution</h3> <canvas id="servicePie"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Logs / Second</h3> <canvas id="lineChart"></canvas>
+    </div>
+  </div> 
+  
+  
+  
+
+
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Client</th>
+          <th>Service</th>
+          <th>Level</th>
+          <th>Message</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody> 
+        <tr *ngFor="let log of logs">
+          <td>{{ log.timestamp | date:'shortTime' }}</td>
+          <td>{{ log.customerId }}</td>
+          <td>{{ log.serviceName }}</td>
+          <td> <span
+              [ngClass]="{ 'error-level': log.logLevel === 'ERROR', 'warn-level': log.logLevel === 'WARN', 'info-level': log.logLevel === 'INFO' }">
+              {{ log.logLevel }} </span> </td>
+          <td>{{ log.message }}</td>
+          <td>{{ log.details }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
