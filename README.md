@@ -1,9 +1,9 @@
-🚀 Kafka Real-Time Log Monitoring Dashboard
+**🚀 Kafka Real-Time Log Monitoring Dashboard**
 
 A real-time transaction log monitoring system built using Spring Boot, Apache Kafka, Kafka Streams, WebSockets, and Angular.
 This project demonstrates a scalable, event-driven architecture where logs are processed, filtered at backend, and streamed live to UI dashboards.
 
-📌 Features
+**📌 Features**
 
 * 🔄 Real-time log streaming using WebSockets (STOMP)
 * 🎯 Backend-level filtering (client ID + service name)
@@ -14,73 +14,37 @@ This project demonstrates a scalable, event-driven architecture where logs are p
 * ⏯️ Start/Stop live streaming
 * 🧩 Event-driven, scalable architecture
 
-🧠 Tech Stack
+**🧠 Tech Stack**
 
 Backend
 * Spring Boot
 * Apache Kafka
 * Kafka Streams
 * Spring WebSocket (STOMP)
+
+  
 Frontend
 * Angular
 * Chart.js
 * WebSocket (SockJS + STOMP)
-* 
 
-🏗️ Architecture Diagram
+
+**🏗️ Architecture Diagram**
 
 ￼<img width="1020" height="511" alt="KafkaFlow drawio" src="https://github.com/user-attachments/assets/9c9746c4-06fa-4e91-9f50-e0909c7331ba" />
 
 
 
 
-🔄 Flow Explanation
+**🔄 Flow**
 
-+---------------------+
-|   Log Producer      |
-| (Spring Boot)       |
-+----------+----------+
-           |
-           ▼
-+---------------------+
-| Kafka (logs-topic)  |
-+----------+----------+
-           |
-           ▼
-+-----------------------------+
-| Kafka Streams Processor     |
-| - Forwards logs             |
-| - Generates metrics         |
-+----------+------------------+
-           | 
-   +-------+--------+
-   |                |
-   ▼                ▼
-ui-logs-topic   service-metrics-topic
-   |                |
-   ▼                ▼
-+---------------------------+     +-----------------------------+
-| LogConsumer               |     | MetricsConsumer             |
-| (reads ui-logs-topic)     |     | (reads metrics topic)       |
-+------------+--------------+     +-------------+---------------+
-             |                                  |
-             ▼                                  ▼
-      WebSocket Layer (STOMP)         Broadcast metrics to all
-      - Stores session filters
-      - Filters logs per session
-      - Sends to topic paths
-             |
-             ▼
-+----------------------------------+
-| Angular Dashboard (UI)           |
-| - Receives filtered logs         |
-| - Displays charts + table        |
-+----------------------------------+
+<img width="441" height="696" alt="Screenshot 2026-04-04 at 6 18 17 PM" src="https://github.com/user-attachments/assets/89154d59-622f-4734-9453-a42de19543af" />
 
 
 
 
-1️⃣ Log Generation
+
+**1️⃣ Log Generation**
 Logs are generated in backend:
 
 OrderService → "Order created successfully"
@@ -103,7 +67,7 @@ Logs are sent to:
 Kafka → logs-topic
 
 
-2️⃣ Stream Processing (Kafka Streams)
+**2️⃣ Stream Processing (Kafka Streams)**
 Kafka Streams processes logs:
 * Forwards logs → ui-logs-topic
 * Aggregates counts → service-metrics-topic
@@ -112,7 +76,7 @@ logs-topic → ui-logs-topic
            → service-metrics-topic
 
 
-3️⃣ Backend Filtering (Key Feature)
+**3️⃣ Backend Filtering (Key Feature)**
 Logs are consumed by:
 
 LogConsumer.java
@@ -141,7 +105,7 @@ Session A → CUST-1001 + OrderService → ✅ sent
 Session B → CUST-1002 + PaymentService → ❌ ignored
 
 
-4️⃣ WebSocket Delivery
+**4️⃣ WebSocket Delivery**
 Logs are pushed using:
 
 /topic/logs/{customerId}/{serviceName}
@@ -151,14 +115,14 @@ Metrics are broadcast to:
 /topic/metrics
 
 
-5️⃣ UI Subscription
+**5️⃣ UI Subscription**
 Angular subscribes to:
 
 /topic/logs/{client}/{service}
 /topic/metrics
 
 
-6️⃣ UI Rendering
+**6️⃣ UI Rendering**
 Dashboard displays:
 ✔ Table
 * Time
@@ -202,7 +166,7 @@ Benefits:
 
 
 
-📊 Dashboard Features
+**📊 Dashboard Features**
 
 ✔ Stats
 * Total Logs
@@ -225,7 +189,7 @@ Benefits:
 
 
 
-▶️ How to Run
+**▶️ How to Run**
 
 1️⃣ Start Kafka & Zookeeper
 
@@ -254,21 +218,21 @@ http://localhost:4200
 http://localhost:8080/log/stream
 
 
-🎮 How to Use
+**🎮 How to Use**
 1. Select Client ID + Service
 2. Click Connect
 3. Logs start streaming
 4. Change filters → auto re-subscribe
 5. Observe real-time updates
 
-🚀 Key Highlights
+**🚀 Key Highlights**
 * Real-time Kafka streaming system
 * Backend-level filtering (important feature)
 * WebSocket-based delivery
 * Kafka Streams for analytics
 * Clean separation of concerns
 
-🧠 Learnings
+**🧠 Learnings**
 * Kafka producers, consumers, and streams
 * Real-time data processing
 * WebSocket-based communication
